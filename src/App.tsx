@@ -1,35 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { UserCard } from "./components/UserCard";
+import { useAllUsers } from "./hooks/useAllUsers";
 
 function App() {
-  const [count, setCount] = useState(0)
+  // const [userProfiles, setUserProfiles] = useState<UserProfile[]>([]);
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(false);
+
+  const onClickFetchUser = () => {
+    getUsers();
+    // setLoading(true);
+    // setError(false);
+    // axios
+    //   .get<User[]>("https://jsonplaceholder.typicode.com/users")
+    //   .then((res) => {
+    //     const data = res.data.map((user) => ({
+    //       id: user.id,
+    //       name: `${user.name}(${user.username})`,
+    //       email: user.email,
+    //       address: `${user.address.city}${user.address.suite}${user.address.street}`,
+    //     }));
+    //     setUserProfiles(data);
+    //   })
+    //   .catch(() => {
+    //     setError(true);
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
+  };
+
+  //call custom hook
+  const { getUsers, userProfiles, loading, error } = useAllUsers();
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <button onClick={onClickFetchUser}>データ取得</button>
+      <br />
+      {error ? (
+        <p style={{ color: "red" }}>データの取得に失敗しました</p>
+      ) : loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          {userProfiles.map((user) => (
+            <UserCard key={user.id} user={user} />
+          ))}
+        </>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
